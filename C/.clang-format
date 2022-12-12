@@ -1,0 +1,32 @@
+# clang-format v13.
+# Configured for C file.
+
+BasedOnStyle: Chromium
+
+Language: Cpp
+Standard: c++17
+
+IndentWidth: 2
+
+AlignAfterOpenBracket: AlwaysBreak
+AlignArrayOfStructures: Right
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: Consecutive
+AlignEscapedNewlines: Left
+
+AlignOperands: Align
+BreakBeforeBinaryOperators: true
+
+AlignTrailingComments: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+
+BinPackParameters: false
+
+BinPackArguments: false
+InsertTrailingCommas: Wrapped
+
+PointerAlignment: Right
+
+SortIncludes: CaseInsensitive
+
