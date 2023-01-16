@@ -1,5 +1,6 @@
 #include <locale.h>
 #include <ncurses.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +11,8 @@
 #define H           32
 #define SPAWN_RATIO 40
 #define TIMEOUT_MS  1000
+
+bool IS_MAP_SURROUNDED_BY_WALLS = false;
 
 struct Rule {
   int birth[2];
@@ -204,7 +207,7 @@ int cntneighbors(Map *map, int y, int x) {
   for (int dy = -1; dy <= 1; dy++) {
     for (int dx = -1; dx <= 1; dx++) {
       if (dy == 0 && dx == 0) continue;
-      if ((*map)[(y + H + dy) % H][(x + W + dx) % W] != false) n++;
+      if (IS_MAP_SURROUNDED_BY_WALLS == false && (*map)[(y + H + dy) % H][(x + W + dx) % W] != false) n++;
     }
   }
   return n;
