@@ -1,4 +1,4 @@
-# clang-format v13.
+# clang-format v14.
 # Configured for C file.
 
 BasedOnStyle: Chromium
@@ -6,7 +6,8 @@ BasedOnStyle: Chromium
 Language: Cpp
 Standard: c++17
 
-IndentWidth: 2
+IndentWidth: 8
+UseTab: ForIndentation
 
 AlignAfterOpenBracket: AlwaysBreak
 AlignArrayOfStructures: Right
@@ -30,3 +31,8 @@ PointerAlignment: Right
 
 SortIncludes: CaseInsensitive
 
+RemoveBracesLLVM: true
+SeparateDefinitionBlocks: Always
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
