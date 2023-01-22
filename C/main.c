@@ -14,14 +14,14 @@
 
 bool IS_MAP_SURROUNDED_BY_WALLS = false;
 
-struct Rule {
+typedef struct _Rule {
 	int birth[2];
 	int survival[2];
-};
+} Rule;
 
 typedef bool Map[H][W];
 
-enum Request {
+typedef enum _Request {
 	INIT,
 	PLAY,
 	PAUSE,
@@ -36,26 +36,26 @@ enum Request {
 
 	STEP,
 	FAST_FWD,
-};
+} Request;
 
-struct Visual {
+typedef struct _Visual {
 	int margin;
 	int gap;
 	char cell[50];
 	char blank[50];
-};
+} Visual;
 
-struct World {
-	struct Rule rule;
+typedef struct _World {
+	Rule rule;
 	unsigned int seed;
 	unsigned int iteration;
 	Map curr;
 	Map next;
 	int cursor[2];
 	bool loop;
-	enum Request required;
-	struct Visual visual;
-};
+	Request required;
+	Visual visual;
+} World;
 
 int randint(int min, int max, bool isiclusive);
 
@@ -96,10 +96,10 @@ int genmap(int spawnratio, Map *curr, Map *next) {
 	return 0;
 }
 
-int initworld(struct World *world);
+int initworld(World *world);
 
-int initworld(struct World *world) {
-	static const struct World WORLD_DEFAULT = {
+int initworld(World *world) {
+	static const World WORLD_DEFAULT = {
 		.rule = {
 			.birth = {3, 3},
 			.survival = {2, 3},
@@ -129,9 +129,9 @@ int initworld(struct World *world) {
 	return 0;
 }
 
-int printmap(Map *curr, struct Visual *visual);
+int printmap(Map *curr, Visual *visual);
 
-int printmap(Map *curr, struct Visual *visual) {
+int printmap(Map *curr, Visual *visual) {
 	for (int y = 0; y < H; y++) {
 		for (int i = 0; i < visual->margin; i++)
 			printw("%s", visual->blank);  // Left margin
@@ -181,9 +181,9 @@ int dcntcell(const int cellcnt) {
 	return d;
 }
 
-int printstats(struct World *world);
+int printstats(World *world);
 
-int printstats(struct World *world) {
+int printstats(World *world) {
 	static char stats[80];
 
 	if (world->iteration == 0 || world->loop != false) {
@@ -200,9 +200,9 @@ int printstats(struct World *world) {
 	return 0;
 }
 
-int printworld(struct World *world);
+int printworld(World *world);
 
-int printworld(struct World *world) {
+int printworld(World *world) {
 	printstats(world);
 
 	printmap(&world->curr, &world->visual);  // TODO
@@ -225,9 +225,9 @@ int cntneighbors(Map *map, int y, int x) {
 	return n;
 }
 
-bool cellnextstate(bool currentstate, int nneighbors, struct Rule *rule);
+bool cellnextstate(bool currentstate, int nneighbors, Rule *rule);
 
-bool cellnextstate(bool currentstate, int nneighbors, struct Rule *rule) {
+bool cellnextstate(bool currentstate, int nneighbors, Rule *rule) {
 	if (nneighbors < rule->survival[0] || rule->survival[1] < nneighbors)
 		return false;  // Kill
 	else if (rule->birth[0] <= nneighbors && nneighbors <= rule->birth[1])
@@ -235,7 +235,7 @@ bool cellnextstate(bool currentstate, int nneighbors, struct Rule *rule) {
 	return currentstate;  // Keep
 }
 
-int *updatemap(Map *curr, Map *next, struct Rule *rule) {
+int *updatemap(Map *curr, Map *next, Rule *rule) {
 	int nneighbors = 0;
 	for (int y = 0; y < H; y++) {
 		for (int x = 0; x < W; x++) {
@@ -252,13 +252,13 @@ int *updatemap(Map *curr, Map *next, struct Rule *rule) {
 	return 0;
 }
 
-struct World *iterateworld(struct World *world) {
+World *iterateworld(World *world) {
 	world->iteration += 1;
 	updatemap(&world->curr, &world->next, &world->rule);
 	return world;
 }
 
-enum Request waitkeyinput() {
+Request waitkeyinput() {
 	timeout(TIMEOUT_MS);
 	switch (getch()) {
 		case 'R':
@@ -296,9 +296,9 @@ enum Request waitkeyinput() {
 	}
 }
 
-inline void mvcursor(enum Request required, int (*cursor)[2]);
+inline void mvcursor(Request required, int (*cursor)[2]);
 
-inline void mvcursor(enum Request required, int (*cursor)[2]) {
+inline void mvcursor(Request required, int (*cursor)[2]) {
 	switch (required) {
 		case CUR_LT:
 			(*cursor)[1] = ((*cursor)[1] + W - 1) % W;
@@ -325,16 +325,16 @@ inline bool togglecell(Map *curr, int (*cursor)[2]) {
 	return b;
 }
 
-inline int pause(enum Request request, enum Request *required) {
+inline int pause(Request request, Request *required) {
 	*required = request;
 	return 0;
 }
 
 int main(int argc, char *argv[]) {
-	struct World world;
+	World world;
 
 	initworld(&world);
-	world.visual = (struct Visual){
+	world.visual = (Visual){
 	    .margin = 0,
 	    .gap    = 1,
 	    .cell   = " ",
