@@ -12,7 +12,11 @@
 #define SPAWN_RATIO 40
 #define TIMEOUT_MS  1000
 
-bool IS_MAP_SURROUNDED_BY_WALLS = false;
+typedef struct _Settings {
+	uint8_t w;
+	uint8_t h;
+} Settings;
+static bool IS_MAP_SURROUNDED_BY_WALLS = false;
 
 typedef struct _Rule {
 	int birth[2];
